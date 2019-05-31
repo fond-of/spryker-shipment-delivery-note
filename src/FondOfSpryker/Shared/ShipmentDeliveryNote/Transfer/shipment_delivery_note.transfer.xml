@@ -23,7 +23,7 @@
         <property name="idOrder" type="int" />
         <property name="orderReference" type="string" />
         <property name="filter" type="Filter" />
-        <property name="shipmentDeliveryNote" type="shipmentDeliveryNote[]" singular="shipmentDeliverNote" />
+        <property name="items" type="shipmentDeliveryNote[]" singular="shipmentDeliverNote" />
     </transfer>
 
     <transfer name="ShipmentDeliveryNoteAddress">
