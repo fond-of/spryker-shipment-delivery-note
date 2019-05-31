@@ -4,7 +4,7 @@ namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 
-class ShipmentDeliveryNoteToSalesBridge implements InvoiceToSalesInterface
+class ShipmentDeliveryNoteToSalesBridge implements ShipmentDeliveryNoteToSalesInterface
 {
     /**
      * @var \FondOfSpryker\Zed\Sales\Business\SalesFacadeInterface

@@ -4,6 +4,7 @@ namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business;
 
 use Generated\Shared\Transfer\ShipmentDeliveryNoteListTransfer;
 use Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer;
+use Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -22,6 +23,18 @@ class ShipmentDeliveryNoteFacade extends AbstractFacade implements ShipmentDeliv
         string $orderReference): ShipmentDeliveryNoteListTransfer
     {
         return $this->getFactory()->createShipmentDeliveryNoteReader()->findShipmentDeliveryNotesByOrderReference($shipmentDeliveryNoteListTransfer, $orderReference);
+    }
+
+    /**
+     * @param \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     * 
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer
+     */
+    public function createShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer
+    {
+        return $this->getFactory()
+            ->createShipmentDeliveryNote()
+            ->create($shipmentDeliveryNoteTransfer);
     }
 
 }

@@ -8,7 +8,7 @@
         <property name="fkSalesOrder" type="int" />
         <property name="orderReference" type="string" />
         <property name="customerReference" type="string" />
-        <property name="Address" type="InvoiceAddress" />
+        <property name="Address" type="ShipmentDeliveryNoteAddress" />
         <property name="carrierName" type="string" />
         <property name="carrierMethod" type="string" />
         <property name="trackNumber" type="string" />

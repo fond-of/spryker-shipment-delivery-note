@@ -6,7 +6,6 @@ use Generated\Shared\Transfer\LocaleTransfer;
 
 interface ShipmentDeliveryNoteToLocaleInterface
 {
-
     /**
      * @param int $idLocale
      *

@@ -1,11 +1,12 @@
 <?php
 
-namespace FondOfSpryker\Zed\Invoice\Business\Invoice;
+namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote;
 
-use FondOfSpryker\Zed\Invoice\Persistence\InvoiceQueryContainerInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidatorInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteQueryContainerInterface;
 use Spryker\Zed\Sales\Persistence\SalesQueryContainerInterface;
 
-class InvoiceValidator implements InvoiceValidatorInterface
+class ShipmentDeliveryNoteValidator implements ShipmentDeliveryNoteValidatorInterface
 {
     /**
      * @var \Spryker\Zed\Sales\Persistence\SalesQueryContainerInterface
@@ -13,18 +14,18 @@ class InvoiceValidator implements InvoiceValidatorInterface
     protected $salesQueryContainer;
 
     /**
-     * @var \FondOfSpryker\Zed\Invoice\Persistence\InvoiceQueryContainerInterface
+     * @var \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteQueryContainerInterface 
      */
     protected $queryContainer;
 
     /**
-     * InvoiceValidator constructor.
+     * ShipmentDeliveryNoteValidator constructor.
      *
-     * @param \FondOfSpryker\Zed\Invoice\Persistence\InvoiceQueryContainerInterface $queryContainer
+     * @param \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\Sales\Persistence\SalesQueryContainerInterface $salesQueryContainer
      */
     public function __construct(
-        InvoiceQueryContainerInterface $queryContainer,
+        ShipmentDeliveryNoteQueryContainerInterface $queryContainer,
         SalesQueryContainerInterface $salesQueryContainer
     )
     {

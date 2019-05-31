@@ -75,10 +75,10 @@
         <column name="zip_code" size="15" type="VARCHAR" required="true"/>
         <column name="phone" size="255" type="VARCHAR"/>
 
-        <foreign-key name="fos_shipment_delivery_note_address-fk_country" foreignTable="spy_country" phpName="Country" refPhpName="ShipmentDeliveryNoteAddress">
+        <foreign-key name="fos_shipment_delivery_note_address-fk_country" foreignTable="spy_country" phpName="Country" refPhpName="Country">
             <reference local="fk_country" foreign="id_country"/>
         </foreign-key>
-        <foreign-key name="fos_shipment_delivery_note_address-fk_region" foreignTable="spy_region" phpName="Region" refPhpName="ShipmentDeliveryNoteAddress">
+        <foreign-key name="fos_shipment_delivery_note_address-fk_region" foreignTable="spy_region" phpName="Region" refPhpName="Region">
             <reference local="fk_region" foreign="id_region"/>
         </foreign-key>
 

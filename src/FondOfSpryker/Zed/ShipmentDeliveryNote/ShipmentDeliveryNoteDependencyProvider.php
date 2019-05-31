@@ -79,7 +79,7 @@ class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyPro
     protected function addProductFacade(Container $container)
     {
         $container[static::FACADE_PRODUCT] = function (Container $container) {
-            return new ShipmentDeliveryNoteToLocaleBridge($container->getLocator()->product()->facade());
+            return new ShipmentDeliveryNoteToProductBridge($container->getLocator()->product()->facade());
         };
 
         return $container;

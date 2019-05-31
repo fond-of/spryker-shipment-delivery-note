@@ -1,8 +1,8 @@
 <?php
 
-namespace FondOfSpryker\Zed\Invoice\Business\Invoice;
+namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote;
 
-interface InvoiceValidatorInterface
+interface ShipmentDeliveryNoteValidatorInterface
 {
     /**
      * @param string $orderReference
