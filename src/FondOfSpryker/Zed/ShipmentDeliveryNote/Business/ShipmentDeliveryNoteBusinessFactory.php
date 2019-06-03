@@ -9,6 +9,8 @@ use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\Shipmen
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteReaderInterface;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidator;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidatorInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManager;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManagerInterface;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToCountryInterface;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToLocaleInterface;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToProductInterface;
@@ -59,11 +61,25 @@ class ShipmentDeliveryNoteBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManager
+     */
+    public function createTransactionStatusManager(): TransactionStatusUpdateManagerInterface
+    {
+        return new TransactionStatusUpdateManager(
+            $this->getQueryContainer(),
+            $this->getRepository(),
+            $this->createShipmentDeliveryNoteHydrator()
+        );
+    }
+
+    /**
      * @return \Spryker\Zed\Sales\Business\Model\Order\OrderHydratorInterface
      */
     public function createShipmentDeliveryNoteHydrator()
     {
-        return new ShipmentDeliveryNoteHydrator();
+        return new ShipmentDeliveryNoteHydrator(
+            $this->getQueryContainer()
+        );
     }
 
     /**

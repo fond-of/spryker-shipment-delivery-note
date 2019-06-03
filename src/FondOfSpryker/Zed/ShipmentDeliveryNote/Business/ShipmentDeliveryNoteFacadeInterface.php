@@ -25,5 +25,17 @@ interface ShipmentDeliveryNoteFacadeInterface
      */
     public function createShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer;
 
+    /**
+     * Specification:
+     * - Checks if Shipment Delivery Note is Created
+     *
+     * @api
+     *
+     * @param int $idSalesOrder
+     * @param int $idSalesOrderItem
+     *
+     * @return bool
+     */
+    public function isShipmentDeliveryNoteAppointed($idSalesOrder, $idSalesOrderItem): bool;
 
 }

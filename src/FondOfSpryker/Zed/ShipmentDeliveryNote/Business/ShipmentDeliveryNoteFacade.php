@@ -37,4 +37,22 @@ class ShipmentDeliveryNoteFacade extends AbstractFacade implements ShipmentDeliv
             ->create($shipmentDeliveryNoteTransfer);
     }
 
+    /**
+     * Specification:
+     * - Checks if Shipment delivery note is Appointed
+     *
+     * @api
+     *
+     * @param int $idSalesOrder
+     * @param int $idSalesOrderItem
+     *
+     * @return bool
+     */
+    public function isShipmentDeliveryNoteAppointed($idSalesOrder, $idSalesOrderItem): bool
+    {
+        return $this->getFactory()
+            ->createTransactionStatusManager()
+            ->isShipmentDeliveryNoteAppointed($idSalesOrder, $idSalesOrderItem);
+    }
+
 }
