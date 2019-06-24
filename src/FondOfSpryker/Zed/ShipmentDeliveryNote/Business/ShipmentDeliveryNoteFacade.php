@@ -30,11 +30,23 @@ class ShipmentDeliveryNoteFacade extends AbstractFacade implements ShipmentDeliv
      * 
      * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer
      */
-    public function createShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer
+    public function addShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer
     {
         return $this->getFactory()
             ->createShipmentDeliveryNote()
             ->create($shipmentDeliveryNoteTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
+     */
+    public function findShipmentDeliveryNoteById(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteTransfer
+    {
+        return $this->getFactory()
+            ->createShipmentDeliveryNote()
+            ->findById($shipmentDeliveryNoteTransfer);
     }
 
     /**

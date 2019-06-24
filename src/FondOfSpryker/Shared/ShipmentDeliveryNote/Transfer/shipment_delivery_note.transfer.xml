@@ -17,6 +17,8 @@
         <property name="currency" type="string" />
         <property name="store" type="string" />
         <property name="items" type="ShipmentDeliveryNoteItem[]" singular="ShipmentDeliveryNoteItem" />
+        <property name="createdAt" type="string" />
+        <property name="updatedAt" type="string" />
     </transfer>
 
     <transfer name="ShipmentDeliveryNoteList">

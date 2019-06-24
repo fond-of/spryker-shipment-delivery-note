@@ -23,19 +23,21 @@ interface ShipmentDeliveryNoteFacadeInterface
      *
      * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer
      */
-    public function createShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer;
+    public function addShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer;
 
     /**
-     * Specification:
-     * - Checks if Shipment Delivery Note is Created
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
      *
-     * @api
-     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
+     */
+    public function findShipmentDeliveryNoteById(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteTransfer;
+
+    /**
      * @param int $idSalesOrder
      * @param int $idSalesOrderItem
      *
      * @return bool
      */
-    public function isShipmentDeliveryNoteAppointed($idSalesOrder, $idSalesOrderItem): bool;
+    public function isShipmentDeliveryNoteAppointed(int $idSalesOrder, int $idSalesOrderItem): bool;
 
 }

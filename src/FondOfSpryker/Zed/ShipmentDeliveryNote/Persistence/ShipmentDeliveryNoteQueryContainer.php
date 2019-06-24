@@ -20,15 +20,28 @@ class ShipmentDeliveryNoteQueryContainer extends AbstractQueryContainer implemen
     }
 
     /**
-     *
      * @param string $orderReference
      *
-     * @return \Orm\Zed\Invoice\Persistence\SpyInvoiceQuery
-     *
+     * @return \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteQuery
      */
-    public function queryShipmentDeliveryNoteByOrderReference(string $orderReference)
+    public function queryShipmentDeliveryNoteByOrderReference(string $orderReference): FosShipmentDeliveryNoteQuery
     {
         return $this->queryShipmentDelivertyNote()->findOneByOrderReference($orderReference);
+    }
+
+    /**
+     * @param int $idShipmentDeliveryNote
+     *
+     * @return \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteQuery
+     *
+     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     */
+    public function queryShipmentDeliveryNoteById(int $idShipmentDeliveryNote): FosShipmentDeliveryNoteQuery
+    {
+        $query = $this->queryShipmentDelivertyNote();
+        $query->filterByIdShipmentDeliveryNote($idShipmentDeliveryNote);
+
+        return $query;
     }
 
 }

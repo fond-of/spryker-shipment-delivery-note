@@ -129,13 +129,38 @@ class ShipmentDeliveryNote implements ShipmentDeliveryNoteInterface
             return $shipmentDeliveryNoteResponseTransfer;
         }
 
-        $this->saveShipmentDeliveryNoteTransaction($shipmentDeliveryNoteTransfer);
+        $shipmentDeliveryNoteEntity = $this->saveShipmentDeliveryNoteTransaction($shipmentDeliveryNoteTransfer);
+
+
+        $shipmentDeliveryNoteTransfer->setIdShipmentDeliveryNote($shipmentDeliveryNoteEntity->getPrimaryKey());
+        $shipmentDeliveryNoteTransfer->setCreatedAt($shipmentDeliveryNoteEntity->getCreatedAt()->format("Y-m-d H:i:s.u"));
+        $shipmentDeliveryNoteTransfer->setUpdatedAt($shipmentDeliveryNoteEntity->getUpdatedAt()->format("Y-m-d H:i:s.u"));
 
         $shipmentDeliveryNoteResponseTransfer
             ->setIsSuccess(true)
             ->setShipmentDeliveryNoteTransfer($shipmentDeliveryNoteTransfer);
 
         return $shipmentDeliveryNoteResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
+     */
+    public function findById(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteTransfer
+    {
+        $shipmentDeliveryNoteEntity = $this->queryContainer
+            ->queryShipmentDeliveryNoteById($shipmentDeliveryNoteTransfer->getIdShipmentDeliveryNote())
+            ->findOne();
+
+        if ($shipmentDeliveryNoteEntity === null) {
+            return null;
+        }
+
+        $shipmentDeliveryNoteTransfer = $this->hydrateShipmentDeliveryNoteTransferFromEntity($shipmentDeliveryNoteTransfer, $shipmentDeliveryNoteEntity);
+
+        return $shipmentDeliveryNoteTransfer;
     }
 
     /**
@@ -329,6 +354,22 @@ class ShipmentDeliveryNote implements ShipmentDeliveryNoteInterface
         $shipmentDeliveryNoteItemEntity->setFkProductAbstract($this->getIdProductAbstractByConcreteSku($shipmentDeliveryNoteItemTransfer->getSku()));
         $shipmentDeliveryNoteItemEntity->setFkProduct($this->getIdProductConcreteBySku($shipmentDeliveryNoteItemTransfer->getSku()));
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     * @param \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNote $shipmentDeliveryNoteEntity
+     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
+     */
+    protected function hydrateShipmentDeliveryNoteTransferFromEntity(
+        ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer, FosShipmentDeliveryNote $shipmentDeliveryNoteEntity
+    ): ShipmentDeliveryNoteTransfer {
+
+        $shipmentDeliveryNoteTransfer->fromArray($shipmentDeliveryNoteEntity->toArray(), true);
+
+        return $shipmentDeliveryNoteTransfer;
+    }
+
 
     /**
      * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
