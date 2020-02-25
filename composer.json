@@ -18,7 +18,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fond-of-spryker/shipment": "dev-master"
+    "fond-of-spryker/shipment": "dev-feature/paypal-refund"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.11",
