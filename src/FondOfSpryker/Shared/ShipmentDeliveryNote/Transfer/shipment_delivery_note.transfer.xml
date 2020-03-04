@@ -6,59 +6,41 @@
     <transfer name="ShipmentDeliveryNote">
         <property name="idShipmentDeliveryNote" type="int" />
         <property name="fkSalesOrder" type="int" />
-        <property name="orderReference" type="string" />
+        <property name="shipmentDeliveryNoteReference" type="string" />
+
+        <property name="carrierName" type="string"/>
+        <property name="carrierMethod" type="string"/>
+        <property name="trackNumber" type="string"/>
+
+        <property name="email" type="string" />
+        <property name="salutation" type="string" />
+        <property name="lastName" type="string" />
+        <property name="firstName" type="string" />
+
+        <property name="address" type="Address" />
+        <property name="items" type="Item[]"  singular="item" />
+
+        <property name="customer" type="Customer" />
+        <property name="fkCustomer" type="int" />
         <property name="customerReference" type="string" />
-        <property name="Address" type="ShipmentDeliveryNoteAddress" />
-        <property name="carrierName" type="string" />
-        <property name="carrierMethod" type="string" />
-        <property name="trackNumber" type="string" />
-        <property name="shipmentDate" type="string" />
-        <property name="locale" type="string" />
-        <property name="currency" type="string" />
+
+        <property name="locale" type="Locale" />
+        <property name="priceMode" type="string" />
         <property name="store" type="string" />
-        <property name="items" type="ShipmentDeliveryNoteItem[]" singular="ShipmentDeliveryNoteItem" />
+        <property name="currencyIsoCode" type="string" />
+
         <property name="createdAt" type="string" />
         <property name="updatedAt" type="string" />
     </transfer>
 
-    <transfer name="ShipmentDeliveryNoteList">
-        <property name="idOrder" type="int" />
-        <property name="orderReference" type="string" />
-        <property name="filter" type="Filter" />
-        <property name="items" type="shipmentDeliveryNote[]" singular="shipmentDeliverNote" />
-    </transfer>
-
-    <transfer name="ShipmentDeliveryNoteAddress">
+    <transfer name="Address">
         <property name="idShipmentDeliveryNoteAddress" type="int" />
-        <property name="email" type="string" />
-        <property name="country" type="Country" />
-        <property name="region" type="string" />
-        <property name="salutation" type="string" />
-        <property name="firstName" type="string" />
-        <property name="middleName" type="string" />
-        <property name="lastName" type="string" />
-        <property name="address1" type="string" />
-        <property name="address2" type="string" />
-        <property name="address3" type="string" />
-        <property name="company" type="string" />
-        <property name="city" type="string" />
-        <property name="zipCode" type="string" />
-        <property name="phone" type="string" />
     </transfer>
 
-    <transfer name="ShipmentDeliveryNoteItem">
+    <transfer name="Item">
         <property name="idShipmentDeliveryNoteItem" type="int" />
         <property name="fkShipmentDeliveryNote" type="int" />
-        <property name="fkProductAbstract" type="int" />
-        <property name="fkProduct" type="int" />
-        <property name="sku" type="string" />
-        <property name="name" type="string" />
-        <property name="quantity" type="int" />
-        <property name="grossPrice" type="int" />
-        <property name="netPrice" type="int" />
-        <property name="totalAmount" type="int" />
-        <property name="taxAmount" type="int"/>
-        <property name="position" type="int" />
+        <property name="fkSalesOrderItem" type="int" />
     </transfer>
 
     <transfer name="ShipmentDeliveryNoteResponse">
@@ -71,5 +53,4 @@
     <transfer name="ShipmentDeliveryNoteError">
         <property name="message" type="string" />
     </transfer>
-
 </transfers>

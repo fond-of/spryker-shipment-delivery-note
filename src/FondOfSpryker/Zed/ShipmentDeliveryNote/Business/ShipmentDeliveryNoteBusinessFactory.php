@@ -2,154 +2,106 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business;
 
-use FondOfSpryker\Zed\Sales\Persistence\SalesQueryContainerInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNote\ShipmentDeliveryNoteHydrator;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteReader;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNote;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteReaderInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidator;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidatorInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManager;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManagerInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToCountryInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToLocaleInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToProductInterface;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSalesInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteAddressWriter;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteAddressWriterInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteItemsWriter;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteItemsWriterInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNotePluginExecutor;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNotePluginExecutorInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteReferenceGenerator;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteReferenceGeneratorInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteWriter;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteWriterInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSequenceNumberFacadeInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToStoreFacadeInterface;
 use FondOfSpryker\Zed\ShipmentDeliveryNote\ShipmentDeliveryNoteDependencyProvider;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-
 
 /**
  * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\ShipmentDeliveryNoteConfig getConfig()
  * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteEntityManagerInterface getEntityManager()
- * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteRepositoryInterface getRepository()
  */
 class ShipmentDeliveryNoteBusinessFactory extends AbstractBusinessFactory
 {
     /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteReaderInterface
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteWriterInterface
      */
-    public function createShipmentDeliveryNoteReader(): ShipmentDeliveryNoteReaderInterface
+    public function createShipmentDeliveryNoteWriter(): ShipmentDeliveryNoteWriterInterface
     {
-        return new ShipmentDeliveryNoteReader(
-            $this->getLocaleFacade(),
+        return new ShipmentDeliveryNoteWriter(
             $this->getEntityManager(),
-            $this->createShipmentDeliveryNoteHydrator(),
-            $this->getRepository()
+            $this->createShipmentDeliveryNotePluginExecutor()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNote
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNotePluginExecutorInterface
      */
-    public function createShipmentDeliveryNote(): ShipmentDeliveryNote
+    protected function createShipmentDeliveryNotePluginExecutor(): ShipmentDeliveryNotePluginExecutorInterface
     {
-        $config = $this->getConfig();
-
-        $shipmentDeliveryNote = new ShipmentDeliveryNote(
-            $this->getProductFacade(),
-            $this->getSalesFacade(),
-            $this->getCountryFacade(),
-            $this->getQueryContainer(),
-            $config,
-            $this->createShipmentDeliveryNoteValidator(),
-            $this->getLocaleQueryContainer(),
-            $this->getStore()
-        );
-
-        return $shipmentDeliveryNote;
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\TransactionStatus\TransactionStatusUpdateManager
-     */
-    public function createTransactionStatusManager(): TransactionStatusUpdateManagerInterface
-    {
-        return new TransactionStatusUpdateManager(
-            $this->getQueryContainer(),
-            $this->getRepository(),
-            $this->createShipmentDeliveryNoteHydrator()
+        return new ShipmentDeliveryNotePluginExecutor(
+            $this->getShipmentDeliveryNotePreSavePlugins(),
+            $this->getShipmentDeliveryNotePostSavePlugins()
         );
     }
 
     /**
-     * @return \Spryker\Zed\Sales\Business\Model\Order\OrderHydratorInterface
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteAddressWriterInterface
      */
-    public function createShipmentDeliveryNoteHydrator()
+    public function createShipmentDeliveryNoteAddressWriter(): ShipmentDeliveryNoteAddressWriterInterface
     {
-        return new ShipmentDeliveryNoteHydrator(
-            $this->getQueryContainer()
+        return new ShipmentDeliveryNoteAddressWriter($this->getEntityManager());
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteItemsWriterInterface
+     */
+    public function createShipmentDeliveryNoteItemsWriter(): ShipmentDeliveryNoteItemsWriterInterface
+    {
+        return new ShipmentDeliveryNoteItemsWriter($this->getEntityManager());
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model\ShipmentDeliveryNoteReferenceGeneratorInterface
+     */
+    public function createShipmentDeliveryNoteReferenceGenerator(): ShipmentDeliveryNoteReferenceGeneratorInterface
+    {
+        return new ShipmentDeliveryNoteReferenceGenerator(
+            $this->getSequenceNumberFacade(),
+            $this->getStoreFacade(),
+            $this->getConfig()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNote\ShipmentDeliveryNoteValidatorInterface
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNoteExtension\Dependency\Plugin\ShipmentDeliveryNotePreSavePluginInterface]|
      */
-    protected function createShipmentDeliveryNoteValidator(): ShipmentDeliveryNoteValidatorInterface
+    protected function getShipmentDeliveryNotePreSavePlugins(): array
     {
-        return new ShipmentDeliveryNoteValidator(
-            $this->getQueryContainer(),
-            $this->getSalesQueryContainer()
-        );
+        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::PLUGINS_PRE_SAVE);
     }
 
     /**
-     * @return \Spryker\Zed\Locale\Persistence\LocaleQueryContainerInterface
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNoteExtension\Dependency\Plugin\ShipmentDeliveryNotePostSavePluginInterface[]
      */
-    protected function getLocaleQueryContainer()
+    protected function getShipmentDeliveryNotePostSavePlugins(): array
     {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::QUERY_CONTAINER_LOCALE);
+        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::PLUGINS_POST_SAVE);
     }
 
     /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToLocaleInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSequenceNumberFacadeInterface
      */
-    protected function getLocaleFacade(): ShipmentDeliveryNoteToLocaleInterface
+    protected function getSequenceNumberFacade(): ShipmentDeliveryNoteToSequenceNumberFacadeInterface
     {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_LOCALE);
+        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_SEQUENCE_NUMBER);
     }
 
     /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToCountryInterface
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToStoreFacadeInterface
      */
-    protected function getCountryFacade(): ShipmentDeliveryNoteToCountryInterface
+    protected function getStoreFacade(): ShipmentDeliveryNoteToStoreFacadeInterface
     {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_COUNTRY);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToProductInterface
-     */
-    protected function getProductFacade(): ShipmentDeliveryNoteToProductInterface
-    {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_PRODUCT);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSalesInterface
-     */
-    protected function getSalesFacade(): ShipmentDeliveryNoteToSalesInterface
-    {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_SALES);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\Sales\Persistence\SalesQueryContainerInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
-     */
-    protected function getSalesQueryContainer(): SalesQueryContainerInterface
-    {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::QUERY_CONTAINER_SALES);
-    }
-
-    /**
-     * @return \Spryker\Shared\Kernel\Store
-     */
-    protected function getStore()
-    {
-        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::STORE);
+        return $this->getProvidedDependency(ShipmentDeliveryNoteDependencyProvider::FACADE_STORE);
     }
 }

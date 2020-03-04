@@ -2,12 +2,12 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote;
 
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToCountryBridge;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToLocaleBridge;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToProductBridge;
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSalesBridge;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Communication\Plugin\ShipmentDeliveryNoteExtension\AddressShipmentDeliveryNotePreSavePlugin;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Communication\Plugin\ShipmentDeliveryNoteExtension\ItemsShipmentDeliveryNotePostSavePlugin;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Communication\Plugin\ShipmentDeliveryNoteExtension\ReferenceShipmentDeliveryNotePreSavePlugin;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSequenceNumberFacadeBridge;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToStoreFacadeBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
-use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\Container;
 
 /**
@@ -15,30 +15,26 @@ use Spryker\Zed\Kernel\Container;
  */
 class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyProvider
 {
-    public const FACADE_COUNTRY = 'FACADE_COUNTRY';
-    public const FACADE_LOCALE = 'FACADE_LOCALE';
-    public const FACADE_PRODUCT = 'FACADE_PRODUCT';
-    public const FACADE_SALES = 'FACADE_SALES';
+    public const FACADE_SEQUENCE_NUMBER = 'FACADE_SEQUENCE_NUMBER';
+    public const FACADE_STORE = 'FACADE_STORE';
 
-    public const QUERY_CONTAINER_LOCALE = 'QUERY_CONTAINER_LOCALE';
-    public const QUERY_CONTAINER_SALES = 'QUERY_CONTAINER_SALES';
-
-    public const STORE = 'STORE';
+    public const PLUGINS_POST_SAVE = 'PLUGINS_POST_SAVE';
+    public const PLUGINS_PRE_SAVE = 'PLUGINS_PRE_SAVE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideBusinessLayerDependencies(Container $container)
+    public function provideBusinessLayerDependencies(Container $container): Container
     {
-        $container = $this->addLocaleQueryConainer($container);
-        $container = $this->addSalesQueryConainer($container);
-        $container = $this->addStore($container);
-        $container = $this->addCountryFacade($container);
-        $container = $this->addLocaleFacade($container);
-        $container = $this->addProductFacade($container);
-        $container = $this->addSalesFacade($container);
+        $container = parent::provideBusinessLayerDependencies($container);
+
+        $container = $this->addSequenceNumberFacade($container);
+        $container = $this->addStoreFacade($container);
+
+        $container = $this->addShipmentDeliveryNotePreSavePlugins($container);
+        $container = $this->addShipmentDeliveryNotePostSavePlugins($container);
 
         return $container;
     }
@@ -48,10 +44,12 @@ class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyPro
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addStore(Container $container)
+    protected function addSequenceNumberFacade(Container $container): Container
     {
-        $container[static::STORE] = function (Container $container) {
-            return Store::getInstance();
+        $container[static::FACADE_SEQUENCE_NUMBER] = static function (Container $container) {
+            return new ShipmentDeliveryNoteToSequenceNumberFacadeBridge(
+                $container->getLocator()->sequenceNumber()->facade()
+            );
         };
 
         return $container;
@@ -62,10 +60,12 @@ class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyPro
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addLocaleFacade(Container $container)
+    protected function addStoreFacade(Container $container): Container
     {
-        $container[static::FACADE_LOCALE] = function (Container $container) {
-            return new ShipmentDeliveryNoteToLocaleBridge($container->getLocator()->locale()->facade());
+        $container[static::FACADE_STORE] = static function (Container $container) {
+            return new ShipmentDeliveryNoteToStoreFacadeBridge(
+                $container->getLocator()->store()->facade()
+            );
         };
 
         return $container;
@@ -76,13 +76,26 @@ class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyPro
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addProductFacade(Container $container)
+    protected function addShipmentDeliveryNotePreSavePlugins(Container $container): Container
     {
-        $container[static::FACADE_PRODUCT] = function (Container $container) {
-            return new ShipmentDeliveryNoteToProductBridge($container->getLocator()->product()->facade());
+        $self = $this;
+
+        $container[static::PLUGINS_PRE_SAVE] = static function () use ($self) {
+            return $self->getShipmentDeliveryNotePreSavePlugins();
         };
 
         return $container;
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNoteExtension\Dependency\Plugin\ShipmentDeliveryNotePreSavePluginInterface[]
+     */
+    protected function getShipmentDeliveryNotePreSavePlugins(): array
+    {
+        return [
+            new ReferenceShipmentDeliveryNotePreSavePlugin(),
+            new AddressShipmentDeliveryNotePreSavePlugin(),
+        ];
     }
 
     /**
@@ -90,55 +103,24 @@ class ShipmentDeliveryNoteDependencyProvider extends AbstractBundleDependencyPro
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addCountryFacade(Container $container): Container
+    protected function addShipmentDeliveryNotePostSavePlugins(Container $container): Container
     {
-        $container[static::FACADE_COUNTRY] = function (Container $container) {
-            return new ShipmentDeliveryNoteToCountryBridge($container->getLocator()->country()->facade());
+        $self = $this;
+
+        $container[static::PLUGINS_POST_SAVE] = static function () use ($self) {
+            return $self->getShipmentDeliveryNotePostSavePlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNoteExtension\Dependency\Plugin\ShipmentDeliveryNotePostSavePluginInterface[]
      */
-    protected function addSalesFacade(Container $container): Container
+    protected function getShipmentDeliveryNotePostSavePlugins(): array
     {
-        $container[static::FACADE_SALES] = function (Container $container) {
-            return new ShipmentDeliveryNoteToSalesBridge($container->getLocator()->sales()->facade());
-        };
-
-        return $container;
+        return [
+            new ItemsShipmentDeliveryNotePostSavePlugin(),
+        ];
     }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addLocaleQueryConainer(Container $container): Container
-    {
-        $container[static::QUERY_CONTAINER_LOCALE] = function (Container $container) {
-            return $container->getLocator()->locale()->queryContainer();
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addSalesQueryConainer(Container $container): Container
-    {
-        $container[static::QUERY_CONTAINER_SALES] = function (Container $container) {
-            return $container->getLocator()->sales()->queryContainer();
-        };
-
-        return $container;
-    }
-
 }

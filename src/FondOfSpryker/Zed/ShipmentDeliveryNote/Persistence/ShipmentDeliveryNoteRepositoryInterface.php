@@ -2,18 +2,14 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence;
 
-use Generated\Shared\Transfer\InvoiceTransfer;
-use Orm\Zed\Invoice\Persistence\FosInvoice;
-use Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNote;
+use Generated\Shared\Transfer\ItemTransfer;
 
 interface ShipmentDeliveryNoteRepositoryInterface
 {
-    public function findShipmentDeliveryNotesByOrderReference(string $orderReference);
-
     /**
-     * @param int $idSalesOrder
+     * @param int $idSalesOrderItem
      *
-     * @return \Orm\Zed\Invoice\Persistence\FosInvoice|null
+     * @return \Generated\Shared\Transfer\ItemTransfer|null
      */
-    public function findShipmentDeliveryNoteByIdSalesOrder(int $idSalesOrder): ?FosShipmentDeliveryNote;
+    public function findShipmentDeliveryNoteItemByIdSalesOrderItem(int $idSalesOrderItem): ?ItemTransfer;
 }

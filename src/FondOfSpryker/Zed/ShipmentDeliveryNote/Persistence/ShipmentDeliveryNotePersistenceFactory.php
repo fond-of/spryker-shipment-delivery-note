@@ -2,42 +2,50 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence;
 
-use Orm\Zed\Invoice\Persistence\FosShipmentDeliveryNoteAddressQuery;
-use Orm\Zed\Invoice\Persistence\FosShipmentDeliveryNoteItemQuery;
-use Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteQuery;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteAddressMapper;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteAddressMapperInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteItemMapper;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteItemMapperInterface;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteMapper;
+use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteMapperInterface;
+use Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteItemQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 
 /**
  * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\ShipmentDeliveryNoteConfig getConfig()
- * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteQueryContainerInterface getQueryContainer()
  * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteEntityManagerInterface getEntityManager()
- * @method \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteRepositoryInterface getRepository()
  */
 class ShipmentDeliveryNotePersistenceFactory extends AbstractPersistenceFactory
 {
-
     /**
-     * @return \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteQuery
-     */
-    public function createShipmentDeliveryNoteQuery(): FosShipmentDeliveryNoteQuery
-    {
-        return FosShipmentDeliveryNoteQuery::create();
-    }
-
-    /**
-     * @return \Orm\Zed\Invoice\Persistence\FosShipmentDeliveryNoteAddressQuery
-     */
-    public function createShipmentDeliveryNoteAddressQuery(): FosShipmentDeliveryNoteAddressQuery
-    {
-        return FosShipmentDeliveryNoteAddressQuery::create();
-    }
-
-    /**
-     * @return \Orm\Zed\Invoice\Persistence\FosShipmentDeliveryNoteItemQuery
+     * @return \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNoteItemQuery
      */
     public function createShipmentDeliveryNoteItemQuery(): FosShipmentDeliveryNoteItemQuery
     {
         return FosShipmentDeliveryNoteItemQuery::create();
     }
 
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteMapperInterface
+     */
+    public function createShipmentDeliveryNoteMapper(): ShipmentDeliveryNoteMapperInterface
+    {
+        return new ShipmentDeliveryNoteMapper();
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteAddressMapperInterface
+     */
+    public function createShipmentDeliveryNoteAddressMapper(): ShipmentDeliveryNoteAddressMapperInterface
+    {
+        return new ShipmentDeliveryNoteAddressMapper();
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\Propel\Mapper\ShipmentDeliveryNoteItemMapperInterface
+     */
+    public function createShipmentDeliveryNoteItemMapper(): ShipmentDeliveryNoteItemMapperInterface
+    {
+        return new ShipmentDeliveryNoteItemMapper();
+    }
 }

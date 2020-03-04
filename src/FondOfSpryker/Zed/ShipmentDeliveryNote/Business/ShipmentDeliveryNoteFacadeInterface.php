@@ -2,42 +2,60 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business;
 
-use Generated\Shared\Transfer\ShipmentDeliveryNoteListTransfer;
 use Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer;
 use Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer;
 
 interface ShipmentDeliveryNoteFacadeInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteListTransfer $shipmentDeliveryNoteListTransfer
-     * @param string $orderReference
+     * Specification:
+     * - Creates shipment delivery note
      *
-     * @return \FondOfSpryker\Zed\ShipmentDeliveryNote\Business\ShipmentDeliveryNoteResponseTransfer
-     */
-    public function findShipmentDeliveryNotesByOrderReference(
-        ShipmentDeliveryNoteListTransfer $shipmentDeliveryNoteListTransfer,
-        string $orderReference): ShipmentDeliveryNoteListTransfer;
-
-    /**
+     * @api
+     *
      * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
      *
      * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer
      */
-    public function addShipmentDeliveryNote(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteResponseTransfer;
+    public function createShipmentDeliveryNote(
+        ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+    ): ShipmentDeliveryNoteResponseTransfer;
 
     /**
+     * Specification:
+     * - Creates shipment delivery note address
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
      *
      * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
      */
-    public function findShipmentDeliveryNoteById(ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer): ShipmentDeliveryNoteTransfer;
+    public function createShipmentDeliveryNoteAddress(
+        ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+    ): ShipmentDeliveryNoteTransfer;
 
     /**
-     * @param int $idSalesOrder
-     * @param int $idSalesOrderItem
+     * Specification:
+     * - Creates shipment delivery note items
      *
-     * @return bool
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer
      */
-    public function isShipmentDeliveryNoteAppointed(int $idSalesOrder, int $idSalesOrderItem): bool;
+    public function createShipmentDeliveryNoteItems(
+        ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+    ): ShipmentDeliveryNoteTransfer;
 
+    /**
+     * Specification:
+     * - Creates shipment delivery note reference
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function createShipmentDeliveryNoteReference(): string;
 }

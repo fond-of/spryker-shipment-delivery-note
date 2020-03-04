@@ -3,21 +3,33 @@
 
     <table name="fos_shipment_delivery_note" phpName="FosShipmentDeliveryNote" identifierQuoting="true">
         <column name="id_shipment_delivery_note" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+
         <column name="fk_sales_order" required="true" type="INTEGER" />
-        <column name="order_reference" required="true" size="255" type="VARCHAR"/>
-        <column name="customer_reference" required="true" size="255" type="VARCHAR"/>
         <column name="fk_shipment_delivery_note_address" required="true" type="INTEGER" />
+        <column name="fk_locale" type="INTEGER"/>
+
+        <column name="shipment_delivery_note_reference" required="true" size="255" type="VARCHAR"/>
+
+        <column name="customer_reference" required="true" size="255" type="VARCHAR"/>
+        <column name="email" required="false" size="255" type="VARCHAR"/>
+        <column name="first_name" required="false" size="100" type="VARCHAR"/>
+        <column name="last_name" required="false" size="100" type="VARCHAR"/>
+        <column name="salutation" type="ENUM" valueSet="Mr, Mrs, Dr, Ms, Diverse" required="false"/>
+
+        <column name="price_mode" type="ENUM" valueSet="NET_MODE, GROSS_MODE" required="false"/>
+
         <column name="carrier_name" required="true" size="255" type="VARCHAR"/>
         <column name="carrier_method" required="true" size="255" type="VARCHAR"/>
         <column name="track_number" required="true" size="255" type="VARCHAR"/>
         <column name="shipment_date" type="TIMESTAMP" required="false"/>
-        <column name="fk_locale" type="INTEGER"/>
+
         <column name="currency_iso_code" type="VARCHAR" size="5" required="false" />
         <column name="store" type="VARCHAR" size="255" required="false" />
 
         <foreign-key name="fos_shipment_delivery_note-fk_sales_order" foreignTable="spy_sales_order" phpName="SalesOrder">
             <reference local="fk_sales_order" foreign="id_sales_order"/>
         </foreign-key>
+
         <foreign-key name="fos_shipment_delivery_note-fk_shipment_delivery_note_address" foreignTable="fos_shipment_delivery_note_address" phpName="Address">
             <reference local="fk_shipment_delivery_note_address" foreign="id_shipment_delivery_note_address"/>
         </foreign-key>
@@ -33,26 +45,19 @@
 
     <table name="fos_shipment_delivery_note_item" phpName="FosShipmentDeliveryNoteItem" identifierQuoting="true">
         <column name="id_shipment_delivery_note_item" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+
         <column name="fk_shipment_delivery_note" type="INTEGER" required="true"/>
-        <column name="fk_product_abstract" type="INTEGER" required="true"/>
-        <column name="fk_product" type="INTEGER" required="true"/>
+        <column name="fk_sales_order_item" type="INTEGER" required="true"/>
+
         <column name="sku" required="true" size="255" type="VARCHAR"/>
         <column name="name" required="true" size="255" type="VARCHAR"/>
-        <column name="quantity" type="INTEGER" unsigned="true" default="1" required="true" description="/Quantity ordered for item/"/>
-        <column name="gross_price" type="INTEGER" required="true" description="/price for one unit including tax/"/>
-        <column name="net_price" type="INTEGER" required="false" default="0" description="/Price for one unit not including tax/" />
-        <column name="total_amount" type="INTEGER" required="false" description="/Subtotal price amount/" />
-        <column name="tax_amount" type="INTEGER" required="false" default="0" description="/Calculated tax amount based on tax mode/" />
-        <column name="position" required="false" type="INTEGER"/>
+        <column name="quantity" type="INTEGER" unsigned="true" default="1" required="true"/>
 
         <foreign-key name="fos_shipment_delivery_note_item-fk_shipment_delivery_note" foreignTable="fos_shipment_delivery_note" phpName="ShipmentDeliveryNote" refPhpName="Item">
             <reference local="fk_shipment_delivery_note" foreign="id_shipment_delivery_note"/>
         </foreign-key>
-        <foreign-key name="fos_shipment_delivery_note_item-fk_product_abstract" foreignTable="spy_product_abstract" phpName="AbstractProduct">
-            <reference local="fk_product_abstract" foreign="id_product_abstract"/>
-        </foreign-key>
-        <foreign-key name="fos_shipment_delivery_note_item-fk_product" foreignTable="spy_product" phpName="Product">
-            <reference local="fk_product" foreign="id_product"/>
+        <foreign-key name="fos_shipment_delivery_note_item-fk_sales_order_item" foreignTable="spy_sales_order_item" phpName="OrderItem">
+            <reference local="fk_sales_order_item" foreign="id_sales_order_item"/>
         </foreign-key>
 
         <id-method-parameter value="fos_shipment_delivery_note_item_pk_seq"/>
@@ -62,18 +67,22 @@
         <column name="id_shipment_delivery_note_address" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="fk_country" type="INTEGER" required="true"/>
         <column name="fk_region" type="INTEGER"/>
-        <column name="email" size="255" type="VARCHAR" required="false"/>
-        <column name="salutation" type="ENUM" valueSet="Mr, Mrs, Dr, Ms"/>
-        <column name="first_name" required="true" size="100" type="VARCHAR"/>
-        <column name="middle_name" required="false" size="100" type="VARCHAR"/>
-        <column name="last_name" required="true" size="100" type="VARCHAR"/>
         <column name="address1" size="255" type="VARCHAR"/>
         <column name="address2" size="255" type="VARCHAR"/>
         <column name="address3" size="255" type="VARCHAR"/>
-        <column name="company" size="255" type="VARCHAR"/>
+        <column name="cell_phone" size="255" type="VARCHAR"/>
         <column name="city" size="255" type="VARCHAR" required="true"/>
-        <column name="zip_code" size="15" type="VARCHAR" required="true"/>
+        <column name="comment" size="255" type="VARCHAR"/>
+        <column name="company" size="255" type="VARCHAR"/>
+        <column name="description" size="255" type="VARCHAR"/>
+        <column name="email" size="255" type="VARCHAR" required="false"/>
+        <column name="first_name" required="true" size="100" type="VARCHAR"/>
+        <column name="last_name" required="true" size="100" type="VARCHAR"/>
+        <column name="middle_name" required="false" size="100" type="VARCHAR"/>
         <column name="phone" size="255" type="VARCHAR"/>
+        <column name="po_box" size="255" type="VARCHAR"/>
+        <column name="salutation" type="ENUM" valueSet="Mr, Mrs, Dr, Ms, Diverse"/>
+        <column name="zip_code" size="15" type="VARCHAR" required="true"/>
 
         <foreign-key name="fos_shipment_delivery_note_address-fk_country" foreignTable="spy_country" phpName="Country" refPhpName="Country">
             <reference local="fk_country" foreign="id_country"/>
@@ -84,5 +93,4 @@
 
         <id-method-parameter value="fos_shipment_delivery_note_address_pk_seq"/>
     </table>
-
 </database>

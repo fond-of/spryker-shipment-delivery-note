@@ -2,8 +2,7 @@
 
 namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence;
 
-use FondOfSpryker\Zed\ShipmentDeliveryNote\Persistence\ShipmentDeliveryNoteRepositoryInterface;
-use Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNote;
+use Generated\Shared\Transfer\ItemTransfer;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
 /**
@@ -11,22 +10,25 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class ShipmentDeliveryNoteRepository extends AbstractRepository implements ShipmentDeliveryNoteRepositoryInterface
 {
-    public function findShipmentDeliveryNotesByOrderReference(string $orderReference)
-    {
-        return $this->getFactory()
-            ->createShipmentDeliveryNoteQuery()
-            ->findByOrderReference($orderReference);
-    }
-
     /**
-     * @param int $idSalesOrder
+     * @param int $idSalesOrderItem
      *
-     * @return \Orm\Zed\ShipmentDeliveryNote\Persistence\FosShipmentDeliveryNote|null
+     * @return \Generated\Shared\Transfer\ItemTransfer|null
      */
-    public function findShipmentDeliveryNoteByIdSalesOrder(int $idSalesOrder): ?FosShipmentDeliveryNote
+    public function findShipmentDeliveryNoteItemByIdSalesOrderItem(int $idSalesOrderItem): ?ItemTransfer
     {
-        return $this->getFactory()
-            ->createShipmentDeliveryNoteQuery()
-            ->findOneByFkSalesOrder($idSalesOrder);
+        $fosShipmentDeliveryNoteItemQuery = $this->getFactory()->createShipmentDeliveryNoteItemQuery();
+
+        $fosShipmentDeliveryNoteItem = $fosShipmentDeliveryNoteItemQuery->filterByFkSalesOrderItem($idSalesOrderItem)
+            ->findOne();
+
+        if ($fosShipmentDeliveryNoteItem === null) {
+            return null;
+        }
+
+        return $this->getFactory()->createShipmentDeliveryNoteItemMapper()->mapEntityToTransfer(
+            $fosShipmentDeliveryNoteItem,
+            new ItemTransfer()
+        );
     }
 }

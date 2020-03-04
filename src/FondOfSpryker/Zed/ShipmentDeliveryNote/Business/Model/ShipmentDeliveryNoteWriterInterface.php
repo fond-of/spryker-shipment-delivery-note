@@ -1,0 +1,18 @@
+<?php
+
+namespace FondOfSpryker\Zed\ShipmentDeliveryNote\Business\Model;
+
+use Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer;
+use Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer;
+
+interface ShipmentDeliveryNoteWriterInterface
+{
+    /**
+     * @param \Generated\Shared\Transfer\ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\ShipmentDeliveryNoteResponseTransfer
+     */
+    public function create(
+        ShipmentDeliveryNoteTransfer $shipmentDeliveryNoteTransfer
+    ): ShipmentDeliveryNoteResponseTransfer;
+}
