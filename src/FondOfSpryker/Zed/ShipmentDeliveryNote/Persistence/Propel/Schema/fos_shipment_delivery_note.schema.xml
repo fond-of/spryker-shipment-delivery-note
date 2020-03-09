@@ -26,15 +26,15 @@
         <column name="currency_iso_code" type="VARCHAR" size="5" required="false" />
         <column name="store" type="VARCHAR" size="255" required="false" />
 
-        <foreign-key name="fos_shipment_delivery_note-fk_sales_order" foreignTable="spy_sales_order" phpName="SalesOrder">
+        <foreign-key name="fos_shipment_delivery_note-fk_sales_order" foreignTable="spy_sales_order">
             <reference local="fk_sales_order" foreign="id_sales_order"/>
         </foreign-key>
 
-        <foreign-key name="fos_shipment_delivery_note-fk_shipment_delivery_note_address" foreignTable="fos_shipment_delivery_note_address" phpName="Address">
+        <foreign-key name="fos_shipment_delivery_note-fk_shipment_delivery_note_address" foreignTable="fos_shipment_delivery_note_address">
             <reference local="fk_shipment_delivery_note_address" foreign="id_shipment_delivery_note_address"/>
         </foreign-key>
 
-        <foreign-key name="fos_shipment_delivery_note-fk_locale" foreignTable="spy_locale" phpName="Locale">
+        <foreign-key name="fos_shipment_delivery_note-fk_locale" foreignTable="spy_locale">
             <reference local="fk_locale" foreign="id_locale"/>
         </foreign-key>
 
@@ -53,10 +53,10 @@
         <column name="name" required="true" size="255" type="VARCHAR"/>
         <column name="quantity" type="INTEGER" unsigned="true" default="1" required="true"/>
 
-        <foreign-key name="fos_shipment_delivery_note_item-fk_shipment_delivery_note" foreignTable="fos_shipment_delivery_note" phpName="ShipmentDeliveryNote" refPhpName="Item">
+        <foreign-key name="fos_shipment_delivery_note_item-fk_shipment_delivery_note" foreignTable="fos_shipment_delivery_note">
             <reference local="fk_shipment_delivery_note" foreign="id_shipment_delivery_note"/>
         </foreign-key>
-        <foreign-key name="fos_shipment_delivery_note_item-fk_sales_order_item" foreignTable="spy_sales_order_item" phpName="OrderItem">
+        <foreign-key name="fos_shipment_delivery_note_item-fk_sales_order_item" foreignTable="spy_sales_order_item">
             <reference local="fk_sales_order_item" foreign="id_sales_order_item"/>
         </foreign-key>
 
@@ -84,10 +84,10 @@
         <column name="salutation" type="ENUM" valueSet="Mr, Mrs, Dr, Ms, Diverse"/>
         <column name="zip_code" size="15" type="VARCHAR" required="true"/>
 
-        <foreign-key name="fos_shipment_delivery_note_address-fk_country" foreignTable="spy_country" phpName="Country" refPhpName="Country">
+        <foreign-key name="fos_shipment_delivery_note_address-fk_country" foreignTable="spy_country">
             <reference local="fk_country" foreign="id_country"/>
         </foreign-key>
-        <foreign-key name="fos_shipment_delivery_note_address-fk_region" foreignTable="spy_region" phpName="Region" refPhpName="Region">
+        <foreign-key name="fos_shipment_delivery_note_address-fk_region" foreignTable="spy_region">
             <reference local="fk_region" foreign="id_region"/>
         </foreign-key>
 
