@@ -44,8 +44,7 @@
     </transfer>
 
     <transfer name="ShipmentDeliveryNoteResponse">
-        <property name="hasShipmentDeliveryNote" type="bool" />
-        <property name="ShipmentDeliveryNoteTransfer" type="ShipmentDeliveryNote" />
+        <property name="shipmentDeliveryNoteTransfer" type="ShipmentDeliveryNote" />
         <property name="isSuccess" type="bool" />
         <property name="errors" type="ShipmentDeliveryNoteError[]" singular="error" />
     </transfer>
