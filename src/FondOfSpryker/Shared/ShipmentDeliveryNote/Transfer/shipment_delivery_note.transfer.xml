@@ -6,11 +6,13 @@
     <transfer name="ShipmentDeliveryNote">
         <property name="idShipmentDeliveryNote" type="int" />
         <property name="fkSalesOrder" type="int" />
+        <property name="orderReference" type="string" />
         <property name="shipmentDeliveryNoteReference" type="string" />
 
         <property name="carrierName" type="string"/>
         <property name="carrierMethod" type="string"/>
         <property name="trackNumber" type="string"/>
+        <property name="shipmentDate" type="string" />
 
         <property name="email" type="string" />
         <property name="salutation" type="string" />
@@ -25,9 +27,7 @@
         <property name="customerReference" type="string" />
 
         <property name="locale" type="Locale" />
-        <property name="priceMode" type="string" />
         <property name="store" type="string" />
-        <property name="currencyIsoCode" type="string" />
 
         <property name="createdAt" type="string" />
         <property name="updatedAt" type="string" />

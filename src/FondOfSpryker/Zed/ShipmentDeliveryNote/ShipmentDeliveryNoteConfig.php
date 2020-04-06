@@ -10,8 +10,24 @@ class ShipmentDeliveryNoteConfig extends AbstractBundleConfig
     /**
      * @return string|null
      */
-    public function getEnvironmentPrefix(): ?string
+    public function getReferenceEnvironmentPrefix(): ?string
     {
-        return $this->get(ShipmentDeliveryNoteConstants::ENVIRONMENT_PREFIX, null);
+        return $this->get(ShipmentDeliveryNoteConstants::REFERENCE_ENVIRONMENT_PREFIX, null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferencePrefix(): ?string
+    {
+        return $this->get(ShipmentDeliveryNoteConstants::REFERENCE_PREFIX, null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferenceOffset(): ?string
+    {
+        return $this->get(ShipmentDeliveryNoteConstants::REFERENCE_OFFSET, null);
     }
 }

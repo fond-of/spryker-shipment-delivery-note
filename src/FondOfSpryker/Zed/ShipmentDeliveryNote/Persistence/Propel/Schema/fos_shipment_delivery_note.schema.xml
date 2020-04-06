@@ -8,6 +8,7 @@
         <column name="fk_shipment_delivery_note_address" required="true" type="INTEGER" />
         <column name="fk_locale" type="INTEGER"/>
 
+        <column name="order_reference" required="true" size="255" type="VARCHAR"/>
         <column name="shipment_delivery_note_reference" required="true" size="255" type="VARCHAR"/>
 
         <column name="customer_reference" required="true" size="255" type="VARCHAR"/>
@@ -16,14 +17,11 @@
         <column name="last_name" required="false" size="100" type="VARCHAR"/>
         <column name="salutation" type="ENUM" valueSet="Mr, Mrs, Dr, Ms, Diverse" required="false"/>
 
-        <column name="price_mode" type="ENUM" valueSet="NET_MODE, GROSS_MODE" required="false"/>
-
         <column name="carrier_name" required="true" size="255" type="VARCHAR"/>
         <column name="carrier_method" required="true" size="255" type="VARCHAR"/>
         <column name="track_number" required="true" size="255" type="VARCHAR"/>
         <column name="shipment_date" type="TIMESTAMP" required="false"/>
 
-        <column name="currency_iso_code" type="VARCHAR" size="5" required="false" />
         <column name="store" type="VARCHAR" size="255" required="false" />
 
         <foreign-key name="fos_shipment_delivery_note-fk_sales_order" foreignTable="spy_sales_order">

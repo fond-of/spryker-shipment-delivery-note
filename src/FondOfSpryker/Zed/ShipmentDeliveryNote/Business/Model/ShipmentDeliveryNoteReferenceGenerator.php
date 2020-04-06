@@ -57,9 +57,15 @@ class ShipmentDeliveryNoteReferenceGenerator implements ShipmentDeliveryNoteRefe
      */
     protected function getSequenceNumberSettingsTransfer(): SequenceNumberSettingsTransfer
     {
-        return (new SequenceNumberSettingsTransfer())
-            ->setName(ShipmentDeliveryNoteConstants::NAME_SHIPMENT_DELIVERY_NOTE_REFERENCE)
+        $sequenceNumberSettingsTransfer = (new SequenceNumberSettingsTransfer())
+            ->setName(ShipmentDeliveryNoteConstants::REFERENCE_NAME_VALUE)
             ->setPrefix($this->getSequenceNumberPrefix());
+
+        if ($this->config->getReferenceOffset() === null) {
+            return $sequenceNumberSettingsTransfer;
+        }
+
+        return $sequenceNumberSettingsTransfer->setOffset($this->config->getReferenceOffset());
     }
 
     /**
@@ -69,8 +75,19 @@ class ShipmentDeliveryNoteReferenceGenerator implements ShipmentDeliveryNoteRefe
     {
         $sequenceNumberPrefixParts = [
             $this->storeFacade->getCurrentStore()->getName(),
-            $this->config->getEnvironmentPrefix(),
         ];
+
+        $referencePrefix = $this->config->getReferencePrefix();
+
+        if ($referencePrefix !== null && $referencePrefix !== '') {
+            $sequenceNumberPrefixParts[0] = $referencePrefix;
+        }
+
+        $referenceEnvironmentPrefix = $this->config->getReferenceEnvironmentPrefix();
+
+        if ($referenceEnvironmentPrefix !== null && $referenceEnvironmentPrefix !== '') {
+            $sequenceNumberPrefixParts[] = $this->config->getReferenceEnvironmentPrefix();
+        }
 
         return sprintf(
             '%s%s',
