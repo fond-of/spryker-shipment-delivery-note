@@ -10,6 +10,8 @@ use Generated\Shared\Transfer\SequenceNumberSettingsTransfer;
 
 class ShipmentDeliveryNoteReferenceGenerator implements ShipmentDeliveryNoteReferenceGeneratorInterface
 {
+    protected const UNIQUE_IDENTIFIER_SEPARATOR = '-';
+
     /**
      * @var \FondOfSpryker\Zed\ShipmentDeliveryNote\Dependency\Facade\ShipmentDeliveryNoteToSequenceNumberFacadeInterface
      */
@@ -103,6 +105,6 @@ class ShipmentDeliveryNoteReferenceGenerator implements ShipmentDeliveryNoteRefe
      */
     protected function getUniqueIdentifierSeparator(): string
     {
-        return '-';
+        return static::UNIQUE_IDENTIFIER_SEPARATOR;
     }
 }
